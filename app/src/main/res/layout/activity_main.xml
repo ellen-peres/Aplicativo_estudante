@@ -1,68 +1,64 @@
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/main"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:background="@drawable/background_gradient"
+  android:padding="16dp">
+
+
+  <EditText
+    android:id="@+id/input_materia"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background_gradient"
-    android:padding="16dp">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/edittext_border"
+    android:inputType="textPersonName"
+    android:padding="12dp"
+    android:layout_marginTop="78dp"
+    android:textColor="#FFFFFF"
+    android:drawableStart="@drawable/iconesearch"
+    android:textColorHint="#BBBBBB" />
 
-    <!-- Campo de entrada para o nome da matéria com padding e fundo cinza claro -->
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="end|center_vertical"
+    android:layout_marginBottom="16dp">
+
+    <!-- EditText à esquerda -->
     <EditText
-        android:id="@+id/input_materia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Digite o nome da matéria"
-        android:background="@color/cinza"
-        android:padding="12dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#BBBBBB"
-        android:layout_marginBottom="16dp" />
+      android:id="@+id/edit_materias"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:background="@android:color/transparent"
+      android:padding="12dp"
+      android:text="Suas matérias:"
+      android:textColor="#FFFFFF"
+      android:textColorHint="#BBBBBB"
+      android:inputType="none"
+      android:focusable="false"
+      android:textSize="16sp"
+      android:gravity="start|center_vertical"
+      android:layout_marginEnd="8dp"/>
 
-    <!-- Linha horizontal com a média e o botão ao lado direito -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
+    <Button
+      android:id="@+id/add_criterio_button"
+      android:layout_width="39dp"
+      android:layout_height="41dp"
+      android:background="@drawable/rounded_button"
+      android:text="+"
+      android:textSize="16sp"
+      android:textColor="#FFFFFF"
+      android:padding="8dp"
+      android:gravity="center"/>
+  </LinearLayout>
 
-        <TextView
-            android:id="@+id/media_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Média: 0/10"
-            android:textSize="18sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center" />
 
-        <Button
-            android:id="@+id/add_criterio_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:background="@color/cinza"
-            android:textColor="#FFFFFF"
-            android:padding="8dp" />
-    </LinearLayout>
 
-    <!-- Título dos critérios avaliativos -->
-    <TextView
-        android:id="@+id/criterios_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Critérios avaliativos:"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp" />
 
-    <!-- Lista de matérias adicionadas -->
-    <ListView
-        android:id="@+id/materias_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="#FFFFFF"
-        android:dividerHeight="1dp"
-        android:layout_marginTop="16dp" />
 </LinearLayout>

@@ -1,55 +1,60 @@
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/main"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:background="@drawable/background_gradient"
-  android:padding="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-  <!-- Campo de entrada para nome da matéria -->
+  <!-- Barra de pesquisa -->
   <EditText
-    android:id="@+id/input_materia"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Nome da matéria"
-    android:background="@drawable/edittext_border"
-    android:padding="12dp"
-    android:textColor="#FFFFFF"
-    android:textColorHint="#BBBBBB"
-    android:layout_marginBottom="16dp"
-    android:drawableStart="@drawable/iconesearch"/>
+      android:id="@+id/input_pesquisa_materia"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      android:background="@drawable/background_input"
+      android:hint="Pesquisar matéria..."
+      android:padding="12dp"
+      android:textColor="@color/branco_puro"
+      android:textColorHint="@color/cinza_claro" />
 
-  <!-- Botão para adicionar matéria -->
-  <Button
-    android:id="@+id/add_criterio_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="+"
-    android:background="@drawable/rounded_button"
-    android:textColor="#FFFFFF"
-    android:padding="8dp"
-    android:gravity="center"
-    android:layout_marginBottom="16dp"/>
+  <!-- Título e botão de adicionar matéria -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:layout_marginBottom="16dp">
 
-  <!-- Lista de matérias adicionadas -->
+    <TextView
+        android:id="@+id/title_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif-medium"
+        android:text="Suas Matérias"
+        android:textColor="@color/branco_puro"
+        android:textSize="24sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_materia_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_button"
+        android:padding="8dp"
+        android:text="+"
+        android:textColor="@color/branco_puro"
+        app:iconTint="@color/borda_botao" />
+  </LinearLayout>
+
+  <!-- Lista de matérias fixada na parte inferior -->
   <ListView
-    android:id="@+id/materias_list"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:divider="#FFFFFF"
-    android:dividerHeight="1dp"
-    android:layout_marginBottom="16dp"/>
-
-  <!-- Botão para acessar SecondActivity -->
-  <Button
-    android:id="@+id/go_to_second_activity"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Ir para segunda tela"
-    android:background="@drawable/rounded_button"
-    android:textColor="#FFFFFF"
-    android:padding="8dp"
-    android:gravity="center"/>
+      android:id="@+id/materias_list"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:divider="@color/branco_puro"
+      android:dividerHeight="1dp"
+      android:layout_gravity="bottom"/>
 
 </LinearLayout>

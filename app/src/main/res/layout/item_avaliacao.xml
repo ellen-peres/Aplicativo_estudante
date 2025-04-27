@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@color/campo_pesquisa">
+
+    <TextView
+        android:id="@+id/nome_avaliacao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Nome da Avaliação"
+        android:textColor="@color/branco_puro"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/nota_avaliacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nota: 0"
+        android:textColor="@color/destaque_azul"
+        android:textSize="18sp"/>
+</LinearLayout>

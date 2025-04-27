@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="cinza">#262938</color>
+    <color name="fundo_app">#2E4F63</color> <!-- Fundo escuro -->
+    <color name="campo_pesquisa">#505B6A</color> <!-- Cor do fundo da barra de pesquisa -->
+    <color name="borda_botao">#2E4F63</color> <!-- Cor da borda dos botões -->
+
+    <color name="botao_acao">#2E4F63</color> <!-- Cor do botão -->
+    <color name="branco_puro">#FFFFFF</color> <!-- Textos brancos -->
+    <color name="cinza_claro">#BBBBBB</color> <!-- Cinza para dicas de texto -->
+    <color name="destaque_azul">#0099FF</color> <!-- Azul para médias -->
+
 </resources>

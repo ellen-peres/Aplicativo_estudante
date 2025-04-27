@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/campo_pesquisa"/> <!-- Define a cor do fundo -->
+    <corners android:radius="16dp"/> <!-- Arredonda as bordas -->
+    <padding android:left="12dp" android:right="12dp"/> <!-- Define espaçamento interno -->
+</shape>

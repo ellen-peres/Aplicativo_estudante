@@ -1,62 +1,69 @@
 package com.example.teste1
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import androidx.activity.enableEdgeToEdge
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
-  private val materias = mutableListOf<String>() // Lista de matérias adicionadas
+  private val materias = mutableListOf<String>()
+  private lateinit var adapter: ArrayAdapter<String>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
     setContentView(R.layout.activity_main)
 
-    // Aplicando as margens das barras do sistema
-    ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-      val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-      v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-      insets
+    val addMateriaButton = findViewById<Button>(R.id.add_materia_button)
+    val materiasListView = findViewById<ListView>(R.id.materias_list)
+    val inputPesquisaMateria = findViewById<EditText>(R.id.input_pesquisa_materia)
+
+    adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, materias)
+    materiasListView.adapter = adapter
+
+    addMateriaButton.setOnClickListener {
+      adicionarMateria()
     }
 
-    // Referências aos elementos do layout
-    val inputMateria = findViewById<EditText>(R.id.input_materia)
-    val addCriterioButton = findViewById<Button>(R.id.add_criterio_button)
-    val materiasList = findViewById<ListView>(R.id.materias_list)
-    val goToSecondActivityButton = findViewById<Button>(R.id.go_to_second_activity)
-
-    // Adaptador para exibir as matérias na ListView
-    val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, materias)
-    materiasList.adapter = adapter
-
-    // Configuração do botão para adicionar matérias
-    addCriterioButton.setOnClickListener {
-      val materia = inputMateria.text.toString()
-      if (materia.isNotEmpty()) {
-        materias.add(materia) // Adiciona a matéria à lista
-        adapter.notifyDataSetChanged() // Atualiza a lista exibida
-        inputMateria.text.clear() // Limpa o campo de entrada
+    inputPesquisaMateria.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(s: Editable?) {}
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        adapter.filter.filter(s)
       }
-    }
+    })
 
-    // Configuração do botão para ir para a SecondActivity
-    goToSecondActivityButton.setOnClickListener {
+    materiasListView.setOnItemClickListener { _, _, position, _ ->
       val intent = Intent(this, SecondActivity::class.java)
+      intent.putExtra("materiaNome", materias[position])
       startActivity(intent)
     }
   }
-}
 
-class SecondActivity : AppCompatActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_second)
+  private fun adicionarMateria() {
+    val inputMateria = EditText(this)
+    inputMateria.hint = "Digite o nome da matéria"
+
+    val dialog = AlertDialog.Builder(this)
+    dialog.setTitle("Adicionar Matéria")
+    dialog.setView(inputMateria)
+    dialog.setPositiveButton("Adicionar") { _, _ ->
+      val materiaNome = inputMateria.text.toString().trim()
+      if (materiaNome.isNotEmpty()) {
+        materias.add(materiaNome)
+        adapter.notifyDataSetChanged()
+
+        val listView = findViewById<ListView>(R.id.materias_list)
+        listView.post {
+          listView.smoothScrollToPosition(materias.size - 1)
+        }
+      } else {
+        Toast.makeText(this, "Nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
+      }
+    }
+    dialog.setNegativeButton("Cancelar", null)
+    dialog.show()
   }
 }

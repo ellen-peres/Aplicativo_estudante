@@ -1,77 +1,87 @@
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/main"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:background="@drawable/background_gradient"
-  android:padding="16dp">
-
-  <!-- Campo de entrada para nome da matéria -->
-  <EditText
-    android:id="@+id/input_materia"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="Nome da matéria"
-    android:background="@drawable/edittext_border"
-    android:padding="12dp"
-    android:textColor="#FFFFFF"
-    android:textColorHint="#BBBBBB"
-    android:layout_marginBottom="16dp"/>
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+  <!-- Título com nome da matéria -->
+  <TextView
+      android:id="@+id/title_second"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Nome da Matéria"
+      android:textSize="24sp"
+      android:textColor="@color/branco_puro"
+      android:fontFamily="sans-serif-medium"
+      android:gravity="center"
+      android:layout_marginBottom="24dp"/>
 
   <!-- Seção de média -->
   <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:layout_marginBottom="16dp">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:gravity="center"
+      android:layout_marginBottom="16dp">
 
     <TextView
-      android:id="@+id/media_label_top"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Média:"
-      android:textSize="18sp"
-      android:textColor="#FFFFFF"
-      android:gravity="center"/>
+        android:id="@+id/media_label_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Média ponderada:"
+        android:textSize="20sp"
+        android:textColor="@color/branco_puro"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"/>
 
     <TextView
-      android:id="@+id/media_label_bottom"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="0/10"
-      android:textSize="18sp"
-      android:textColor="#FFFFFF"
-      android:gravity="center"/>
+        android:id="@+id/media_label_final"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.0"
+        android:textSize="22sp"
+        android:textColor="@color/destaque_azul"
+        android:fontFamily="sans-serif-bold"
+        android:gravity="center"/>
   </LinearLayout>
 
-  <!-- Critérios avaliativos -->
+  <!-- Seção de "Atividades Avaliativas" e botão de adicionar -->
   <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="end|center_vertical"
-    android:layout_marginBottom="16dp">
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:layout_marginTop="16dp">
 
     <TextView
-      android:id="@+id/media_label"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:text="Critérios avaliativos:"
-      android:textSize="18sp"
-      android:textColor="#FFFFFF"
-      android:gravity="start|center_vertical"/>
+        android:id="@+id/atividades_avaliativas_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Atividades Avaliativas"
+        android:textSize="20sp"
+        android:textColor="@color/branco_puro"
+        android:fontFamily="sans-serif-medium"
+        android:layout_weight="1"/>
 
-    <Button
-      android:id="@+id/add_criterio_button"
-      android:text="+"
-      android:background="@drawable/rounded_button"
-      android:layout_width="48dp"
-      android:layout_height="48dp"
-      android:textColor="#FFFFFF"
-      android:padding="8dp"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/add_avaliacao_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/rounded_button"
+        android:padding="8dp"
+        android:text="+"
+        android:textColor="@color/branco_puro"
+        app:iconTint="@color/borda_botao" />
   </LinearLayout>
 
+  <!-- Lista de avaliações -->
+  <ListView
+      android:id="@+id/lista_avaliacoes"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:divider="@color/branco_puro"
+      android:dividerHeight="1dp"/>
 </LinearLayout>

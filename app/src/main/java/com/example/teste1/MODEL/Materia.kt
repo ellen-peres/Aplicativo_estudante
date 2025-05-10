@@ -4,8 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ANOTACAO(
+data class Materia(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val tituloAnotacao: String,
-    val texto: String
+    val notas: String,
+    val pesoDosCritérios: String,
+    val soma: Int,
+    val converterPeso: Int
 )
+
+

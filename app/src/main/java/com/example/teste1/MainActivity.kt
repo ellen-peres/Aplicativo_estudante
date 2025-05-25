@@ -5,14 +5,44 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import com.example.teste1.MODEL.Avaliacao
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
   private val materias = mutableListOf<String>()
   private lateinit var adapter: ArrayAdapter<String>
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    val db = Room.databaseBuilder(
+      applicationContext,
+      AppDatabase::class.java,
+      "avaliacoes.db"
+    ).build()
+
+    val dao = db.avaliacaoDao()
+
+// Exemplo: inserir uma avaliação
+    lifecycleScope.launch {
+      val novaAvaliacao = Avaliacao(
+        materia = "História",
+        nota = 8.5f,
+        peso = 2,
+        data = "25/05/2025"
+      )
+      dao.inserir(novaAvaliacao)
+
+      // Testar lendo tudo:
+      val lista = dao.listarTodas()
+      lista.forEach {
+        Log.d("AVALIACAO", "${it.materia} - Nota: ${it.nota}")
+      }
+    }
+    super.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 

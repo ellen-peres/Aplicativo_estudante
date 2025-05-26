@@ -1,0 +1,73 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
+    android:padding="16dp">
+
+    <!-- Nome da avaliação -->
+    <TextView
+        android:id="@+id/nome_avaliacao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nome da Avaliação"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Barra de pesquisa -->
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/edittext_border"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:drawableStart="@drawable/iconesearch"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:textSize="16sp"
+        android:layout_below="@id/nome_avaliacao"
+        android:layout_marginBottom="12dp"
+        android:hint="Pesquisar anotações..."/>
+
+    <!-- Botões fixos abaixo da barra de pesquisa -->
+    <LinearLayout
+        android:id="@+id/top_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_below="@id/search_bar"
+        android:paddingBottom="12dp">
+
+        <Button
+            android:id="@+id/add_nota_button"
+            android:text="+"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_background"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/edit_nota_button"
+            android:text="✎"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_background"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"/>
+    </LinearLayout>
+
+    <!-- Lista de anotações abaixo dos botões -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_notas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_below="@id/top_buttons"
+        android:contentDescription="Lista de anotações"/>
+</RelativeLayout>

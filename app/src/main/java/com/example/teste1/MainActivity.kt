@@ -3,8 +3,6 @@ package com.example.teste1
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
@@ -16,52 +14,47 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val addMateriaButton = findViewById<Button>(R.id.add_materia_button)
-    val materiasListView = findViewById<ListView>(R.id.materias_list)
-    val inputPesquisaMateria = findViewById<EditText>(R.id.input_pesquisa_materia)
+    val listaMaterias = findViewById<ListView>(R.id.materias_list)
+    adapter = ArrayAdapter(this, R.layout.item_materia, R.id.nome_materia, materias)
+    listaMaterias.adapter = adapter
 
-    adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, materias)
-    materiasListView.adapter = adapter
+    listaMaterias.setPadding(12, 16, 12, 16) // ✅ Adiciona espaçamento superior e inferior
 
-    addMateriaButton.setOnClickListener {
+
+    val botaoAdicionar = findViewById<Button>(R.id.add_materia_button)
+    botaoAdicionar.setOnClickListener {
       adicionarMateria()
     }
 
-    inputPesquisaMateria.addTextChangedListener(object : TextWatcher {
-      override fun afterTextChanged(s: Editable?) {}
-      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        adapter.filter.filter(s)
-      }
-    })
-
-    materiasListView.setOnItemClickListener { _, _, position, _ ->
-      val intent = Intent(this, SecondActivity::class.java)
+    listaMaterias.setOnItemClickListener { _, _, position, _ ->
+      val intent = Intent(this, ThirdActivity::class.java)
       intent.putExtra("materiaNome", materias[position])
       startActivity(intent)
     }
   }
 
   private fun adicionarMateria() {
-    val inputMateria = EditText(this)
-    inputMateria.hint = "Digite o nome da matéria"
+    val layout = LinearLayout(this)
+    layout.orientation = LinearLayout.VERTICAL
+    layout.setPadding(32, 16, 32, 16)
+
+    val inputNome = EditText(this)
+    inputNome.hint = "Digite o nome da matéria"
+    layout.addView(inputNome)
 
     val dialog = AlertDialog.Builder(this)
     dialog.setTitle("Adicionar Matéria")
-    dialog.setView(inputMateria)
+    dialog.setView(layout)
     dialog.setPositiveButton("Adicionar") { _, _ ->
-      val materiaNome = inputMateria.text.toString().trim()
-      if (materiaNome.isNotEmpty()) {
-        materias.add(materiaNome)
-        adapter.notifyDataSetChanged()
+      val nomeMateria = inputNome.text.toString().trim()
 
-        val listView = findViewById<ListView>(R.id.materias_list)
-        listView.post {
-          listView.smoothScrollToPosition(materias.size - 1)
-        }
-      } else {
-        Toast.makeText(this, "Nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
+      if (nomeMateria.isEmpty()) {
+        Toast.makeText(this, "O nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
+        return@setPositiveButton
       }
+
+      materias.add(nomeMateria)
+      adapter.notifyDataSetChanged()
     }
     dialog.setNegativeButton("Cancelar", null)
     dialog.show()

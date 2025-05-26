@@ -1,24 +1,38 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="@color/campo_pesquisa">
+    android:padding="8dp"
+    android:background="@drawable/rounded_button"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="12dp">
 
     <TextView
         android:id="@+id/nome_avaliacao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Nome da Avaliação"
-        android:textColor="@color/branco_puro"
-        android:textSize="18sp"/>
+        android:text="Critério 1"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:gravity="start"/>
 
     <TextView
         android:id="@+id/nota_avaliacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nota: 0"
-        android:textColor="@color/destaque_azul"
-        android:textSize="18sp"/>
+        android:text="0/10"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_marginEnd="7dp"/>
+
+   
+
+    <Button
+        android:id="@+id/calendar_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/iconcalendar"
+        android:contentDescription="Selecionar data da avaliação"/>
 </LinearLayout>

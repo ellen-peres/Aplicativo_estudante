@@ -16,7 +16,7 @@
       android:hint="Pesquisar matéria..."
       android:padding="12dp"
       android:textColor="@color/branco_puro"
-      android:textColorHint="@color/cinza_claro" />
+      android:textColorHint="@color/cinza_claro"/>
 
   <!-- Título e botão de adicionar matéria -->
   <LinearLayout
@@ -34,7 +34,7 @@
         android:fontFamily="sans-serif-medium"
         android:text="Suas Matérias"
         android:textColor="@color/branco_puro"
-        android:textSize="24sp" />
+        android:textSize="24sp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_materia_button"
@@ -44,17 +44,22 @@
         android:padding="8dp"
         android:text="+"
         android:textColor="@color/branco_puro"
-        app:iconTint="@color/borda_botao" />
+        app:iconTint="@color/borda_botao"/>
   </LinearLayout>
 
-  <!-- Lista de matérias fixada na parte inferior -->
+  <!-- Lista de matérias sem linha de separação e com espaçamento -->
   <ListView
       android:id="@+id/materias_list"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
-      android:divider="@color/branco_puro"
-      android:dividerHeight="1dp"
-      android:layout_gravity="bottom"/>
+      android:padding="12dp"
+      android:paddingBottom="12dp"
+      android:divider="@null"
+      android:dividerHeight="0dp"
+      android:clipToPadding="false"
+      android:layout_marginTop="12dp"
+      android:layout_marginBottom="12dp"/> <!-- ✅ Espaçamento extra na lista -->
+
 
 </LinearLayout>

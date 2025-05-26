@@ -2,14 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+  <!-- Permissão para enviar notificações no Android 13+ -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
   <application
+
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:theme="@style/Theme.Teste1"
-      tools:targetApi="31">
+      tools:targetApi="33"> <!-- Atualizado para Android 13 -->
 
     <!-- Tela Principal -->
+    <activity android:name=".NotasActivity"/>
+
     <activity
         android:name=".MainActivity"
         android:exported="true">
@@ -20,6 +26,7 @@
     </activity>
 
     <!-- Tela de Avaliações -->
-    <activity android:name=".SecondActivity" />
+    <activity android:name=".ThirdActivity" />
   </application>
+
 </manifest>

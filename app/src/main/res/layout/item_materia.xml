@@ -1,0 +1,19 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+
+    android:gravity="center_vertical"
+
+    android:layout_marginBottom="16dp"> <!-- ✅ Espaçamento aumentado -->
+
+    <TextView
+        android:id="@+id/nome_materia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/branco_puro"
+        android:padding="12dp"/>
+</LinearLayout>

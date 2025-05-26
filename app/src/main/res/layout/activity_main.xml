@@ -22,9 +22,9 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
       android:gravity="center_vertical"
-      android:orientation="horizontal"
-      android:layout_marginBottom="16dp">
+      android:orientation="horizontal">
 
     <TextView
         android:id="@+id/title_main"
@@ -52,9 +52,9 @@
       android:id="@+id/materias_list"
       android:layout_width="match_parent"
       android:layout_height="0dp"
+      android:layout_gravity="bottom"
       android:layout_weight="1"
       android:divider="@color/branco_puro"
-      android:dividerHeight="1dp"
-      android:layout_gravity="bottom"/>
+      android:dividerHeight="1dp" />
 
 </LinearLayout>

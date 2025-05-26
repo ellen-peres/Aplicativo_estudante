@@ -1,7 +1,6 @@
 package com.example.teste1
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,41 +9,43 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import com.example.teste1.MODEL.Avaliacao
+import com.example.teste1.MODEL.Materias
+import com.example.teste1.DAO.MateriasDao
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
   private val materias = mutableListOf<String>()
   private lateinit var adapter: ArrayAdapter<String>
+  private lateinit var dao: MateriasDao  // <- Agora é propriedade da classe
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+
     val db = Room.databaseBuilder(
       applicationContext,
       AppDatabase::class.java,
-      "avaliacoes.db"
+      "materias.db"
     ).build()
+    dao = db.materiasDao()
 
-    val dao = db.avaliacaoDao()
-
-// Exemplo: inserir uma avaliação
-    lifecycleScope.launch {
-      val novaAvaliacao = Avaliacao(
-        materia = "História",
-        nota = 8.5f,
-        peso = 2,
-        data = "25/05/2025"
-      )
-      dao.inserir(novaAvaliacao)
-
-      // Testar lendo tudo:
-      val lista = dao.listarTodas()
-      lista.forEach {
-        Log.d("AVALIACAO", "${it.materia} - Nota: ${it.nota}")
+    // Inserir uma matéria exemplo só na primeira criação
+    if (savedInstanceState == null) {
+      lifecycleScope.launch {
+        val novaMateria = Materias(
+          nomeMateria = "ingles",
+          notas = "teste 2",
+          pesoDosCriterios = "Critério A: 40%, Critério B: 60%",
+          soma = 100,
+          converterPeso = 85
+        )
+        dao.inserir(novaMateria)
+        carregarMaterias()
       }
+    } else {
+      carregarMaterias()
     }
-    super.onCreate(savedInstanceState)
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
 
     val addMateriaButton = findViewById<Button>(R.id.add_materia_button)
     val materiasListView = findViewById<ListView>(R.id.materias_list)
@@ -64,12 +65,6 @@ class MainActivity : AppCompatActivity() {
         adapter.filter.filter(s)
       }
     })
-
-    materiasListView.setOnItemClickListener { _, _, position, _ ->
-      val intent = Intent(this, SecondActivity::class.java)
-      intent.putExtra("materiaNome", materias[position])
-      startActivity(intent)
-    }
   }
 
   private fun adicionarMateria() {
@@ -82,12 +77,22 @@ class MainActivity : AppCompatActivity() {
     dialog.setPositiveButton("Adicionar") { _, _ ->
       val materiaNome = inputMateria.text.toString().trim()
       if (materiaNome.isNotEmpty()) {
-        materias.add(materiaNome)
-        adapter.notifyDataSetChanged()
+        lifecycleScope.launch {
+          val novaMateria = Materias(
+            nomeMateria = materiaNome,
+            notas = "",
+            pesoDosCriterios = "",
+            soma = 0,
+            converterPeso = 0
+          )
+          dao.inserir(novaMateria)
+          materias.add(materiaNome)
+          adapter.notifyDataSetChanged()
 
-        val listView = findViewById<ListView>(R.id.materias_list)
-        listView.post {
-          listView.smoothScrollToPosition(materias.size - 1)
+          val listView = findViewById<ListView>(R.id.materias_list)
+          listView.post {
+            listView.smoothScrollToPosition(materias.size - 1)
+          }
         }
       } else {
         Toast.makeText(this, "Nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
@@ -95,5 +100,14 @@ class MainActivity : AppCompatActivity() {
     }
     dialog.setNegativeButton("Cancelar", null)
     dialog.show()
+  }
+
+  private fun carregarMaterias() {
+    lifecycleScope.launch {
+      val lista = dao.getAll()
+      materias.clear()
+      materias.addAll(lista.map { it.nomeMateria })
+      adapter.notifyDataSetChanged()
+    }
   }
 }

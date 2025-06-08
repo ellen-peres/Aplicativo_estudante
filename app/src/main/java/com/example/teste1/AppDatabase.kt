@@ -6,7 +6,6 @@ import com.example.teste1.DAO.MateriaDao
 import com.example.teste1.DAO.CadernoDao
 import com.example.teste1.DAO.AnotacaoDao
 import com.example.teste1.MODEL.Materia
-import com.example.teste1.MODEL.Caderno
 import com.example.teste1.MODEL.Anotacao
 
 @Database(entities = [Materia::class, Caderno::class, Anotacao::class], version = 1)

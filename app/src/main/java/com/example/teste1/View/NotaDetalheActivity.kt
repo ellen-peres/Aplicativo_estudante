@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import java.io.Serializable
+import com.example.teste1.MODEL.Nota
+import com.example.teste1.R
 
 class NotaDetalheActivity : AppCompatActivity() {
 

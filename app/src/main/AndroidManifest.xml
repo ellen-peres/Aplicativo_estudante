@@ -14,10 +14,10 @@
       tools:targetApi="33"> <!-- Atualizado para Android 13 -->
 
     <!-- Tela Principal -->
-    <activity android:name=".NotasActivity"/>
+    <activity android:name=".com.example.teste1.View.NotasActivity"/>
 
     <activity
-        android:name=".MainActivity"
+        android:name="com.example.teste1.View.MainActivity"
         android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -26,9 +26,9 @@
     </activity>
 
     <!-- Tela de Avaliações -->
-    <activity android:name=".ThirdActivity"/>
-    <activity android:name=".EditPesoActivity"/>
-    <activity android:name=".NotaDetalheActivity" />
+    <activity android:name=".com.example.teste1.View.ThirdActivity"/>
+    <activity android:name=".com.example.teste1.View.EditPesoActivity"/>
+    <activity android:name=".com.example.teste1.View.NotaDetalheActivity" />
 
 
 

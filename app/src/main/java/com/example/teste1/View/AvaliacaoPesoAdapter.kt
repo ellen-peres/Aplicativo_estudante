@@ -1,10 +1,11 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 import com.example.teste1.databinding.EditPesoItemBinding
 
 class AvaliacaoPesoAdapter(

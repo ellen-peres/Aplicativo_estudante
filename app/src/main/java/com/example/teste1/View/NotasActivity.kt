@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 
 import android.app.Activity
 import android.content.Intent
@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import android.widget.Toast
+import com.example.teste1.MODEL.Nota
+import com.example.teste1.R
 
 class NotasActivity : AppCompatActivity() {
 

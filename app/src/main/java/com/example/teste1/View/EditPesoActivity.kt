@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 
 import android.app.Activity
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.R
+import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 
 class EditPesoActivity : AppCompatActivity() {
 

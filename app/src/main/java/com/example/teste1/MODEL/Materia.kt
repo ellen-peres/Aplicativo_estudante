@@ -6,10 +6,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class Materia(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val nomeMateria: String,
     val notas: String,
-    val pesoDosCritérios: String,
+    val pesoDosCriterios: String,
     val soma: Int,
     val converterPeso: Int
 )
-
-

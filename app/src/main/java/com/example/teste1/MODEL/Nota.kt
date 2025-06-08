@@ -1,5 +1,4 @@
-package com.example.teste1
-import android.graphics.Bitmap
+package com.example.teste1.MODEL
 import java.io.Serializable
 import android.net.Uri
 

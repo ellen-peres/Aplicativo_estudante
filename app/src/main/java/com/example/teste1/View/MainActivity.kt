@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.View
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -7,14 +7,32 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
+import com.example.teste1.AppDatabase
+import com.example.teste1.DAO.MateriaDao
+import com.example.teste1.MODEL.Materia
+import com.example.teste1.R
+import com.example.teste1.com.example.teste1.View.ThirdActivity
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
   private val materias = mutableListOf<String>()
   private lateinit var adapter: ArrayAdapter<String>
+  private lateinit var dao: MateriaDao
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // Inicia o banco de dados
+    val db = Room.databaseBuilder(
+      applicationContext,
+      AppDatabase::class.java,
+      "materias.db"
+    ).build()
+    dao = db.materiaDao()
 
     val listaMaterias = findViewById<ListView>(R.id.materias_list)
     val inputPesquisa = findViewById<EditText>(R.id.input_pesquisa_materia)
@@ -23,31 +41,21 @@ class MainActivity : AppCompatActivity() {
     adapter = ArrayAdapter(this, R.layout.item_materia, R.id.nome_materia, materias)
     listaMaterias.adapter = adapter
 
-    // Adiciona espaçamento à lista
-    listaMaterias.setPadding(12, 16, 12, 16)
+    carregarMaterias()
 
-    // Configura o botão de adicionar matéria
     botaoAdicionar.setOnClickListener {
       adicionarMateria()
     }
 
-    // Configura o clique nos itens da lista
     listaMaterias.setOnItemClickListener { _, _, position, _ ->
       val intent = Intent(this, ThirdActivity::class.java)
       intent.putExtra("materiaNome", adapter.getItem(position))
       startActivity(intent)
     }
 
-    // Implementa a funcionalidade de pesquisa
     inputPesquisa.addTextChangedListener(object : TextWatcher {
-      override fun afterTextChanged(s: Editable?) {
-        // Não é necessário implementar
-      }
-
-      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        // Não é necessário implementar
-      }
-
+      override fun afterTextChanged(s: Editable?) {}
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         adapter.filter.filter(s)
       }
@@ -55,34 +63,43 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun adicionarMateria() {
-    val layout = LinearLayout(this)
-    layout.orientation = LinearLayout.VERTICAL
-    layout.setPadding(32, 16, 32, 16)
-
-    val inputNome = EditText(this)
-    inputNome.hint = "Digite o nome da matéria"
-    layout.addView(inputNome)
+    val inputMateria = EditText(this)
+    inputMateria.hint = "Digite o nome da matéria"
 
     val dialog = AlertDialog.Builder(this)
     dialog.setTitle("Adicionar Matéria")
-    dialog.setView(layout)
+    dialog.setView(inputMateria)
     dialog.setPositiveButton("Adicionar") { _, _ ->
-      val nomeMateria = inputNome.text.toString().trim()
+      val nomeMateria = inputMateria.text.toString().trim()
 
       if (nomeMateria.isEmpty()) {
         Toast.makeText(this, "O nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
         return@setPositiveButton
       }
 
-      if (materias.contains(nomeMateria)) {
-        Toast.makeText(this, "Matéria já existe!", Toast.LENGTH_SHORT).show()
-        return@setPositiveButton
+      lifecycleScope.launch {
+        val novaMateria = Materia(
+          nomeMateria = nomeMateria,
+          notas = "",
+          pesoDosCriterios = "",
+          soma = 0,
+          converterPeso = 0
+        )
+        dao.inserir(novaMateria)
+        materias.add(nomeMateria)
+        adapter.notifyDataSetChanged()
       }
-
-      materias.add(nomeMateria)
-      adapter.notifyDataSetChanged()
     }
     dialog.setNegativeButton("Cancelar", null)
     dialog.show()
+  }
+
+  private fun carregarMaterias() {
+    lifecycleScope.launch {
+      val lista = dao.getAll()
+      materias.clear()
+      materias.addAll(lista.map { it.nomeMateria })
+      adapter.notifyDataSetChanged()
+    }
   }
 }

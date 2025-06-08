@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 import android.content.Intent
 
 import android.app.DatePickerDialog
@@ -15,6 +15,8 @@ import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.R
+import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 import java.util.*
 
 class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes: List<Avaliacao>, private val atualizarMedia: () -> Unit) :

@@ -1,4 +1,4 @@
-package com.example.teste1
+package com.example.teste1.com.example.teste1.View
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.R
+import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 
 class ThirdActivity : AppCompatActivity() {
     private val REQUEST_CODE_EDIT_PESO = 1

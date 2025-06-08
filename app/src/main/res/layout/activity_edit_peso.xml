@@ -1,0 +1,101 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background_gradient"
+    android:padding="16dp">
+
+    <!-- Campo de entrada para o nome da matéria -->
+    <EditText
+        android:id="@+id/input_materia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nome da matéria:"
+        android:background="@drawable/edittext_border"
+        android:padding="12dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BBBBBB"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="78dp"/>
+
+    <!-- Exibição da média -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/media_label_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Média:"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/media_label_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0/10"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Linha para atividades avaliativas -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/media_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Critérios avaliativos"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:gravity="start|center_vertical" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/salvar"
+            android:text="Editar Peso"
+            android:background="@drawable/rounded_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:padding="8dp" />
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_edit_peso"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:contentDescription="Lista de avaliações para edição de peso"
+
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/botao_salvar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#2E4F63"
+        android:text="Salvar"/>
+
+    <!-- Lista de avaliações -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_avaliacoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:contentDescription="Lista de avaliações"/>
+
+</LinearLayout>

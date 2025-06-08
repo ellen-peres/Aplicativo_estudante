@@ -6,20 +6,19 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.teste1.MODEL.Avaliacao
-import com.example.teste1.MODEL.Materias
+import com.example.teste1.MODEL.Materia
 
 @Dao
-interface MateriasDao {
-
+interface MateriaDao {
     @Insert
-    suspend fun inserir(materias: Materias)
+    suspend fun inserir(materias: Materia)
 
     @Update
-    suspend fun atualizar(materias: Materias)
+    suspend fun atualizar(materias: Materia)
 
     @Delete
-    suspend fun deletar(materias: Materias)
+    suspend fun deletar(materias: Materia)
 
-    @Query("SELECT * FROM Materias")
-    suspend fun getAll(): List<Materias>
+    @Query("SELECT * FROM Materia")
+    suspend fun getAll(): List<Materia>
 }

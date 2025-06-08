@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Materias(
+data class Materia(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val nomeMateria: String,
     val notas: String,
@@ -12,6 +12,5 @@ data class Materias(
     val soma: Int,
     val converterPeso: Int
 )
-
 
 

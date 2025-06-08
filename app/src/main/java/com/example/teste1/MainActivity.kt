@@ -9,15 +9,16 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import com.example.teste1.MODEL.Materias
-import com.example.teste1.DAO.MateriasDao
+import com.example.teste1.MODEL.Materia
+import com.example.teste1.DAO.MateriaDao
+import com.seuapp.data.database.AppDatabase
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
   private val materias = mutableListOf<String>()
   private lateinit var adapter: ArrayAdapter<String>
-  private lateinit var dao: MateriasDao  // <- Agora é propriedade da classe
+  private lateinit var dao: MateriaDao  // <- Agora é propriedade da classe
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -28,12 +29,12 @@ class MainActivity : AppCompatActivity() {
       AppDatabase::class.java,
       "materias.db"
     ).build()
-    dao = db.materiasDao()
+    dao = db.materiaDao()
 
     // Inserir uma matéria exemplo só na primeira criação
     if (savedInstanceState == null) {
       lifecycleScope.launch {
-        val novaMateria = Materias(
+        val novaMateria = Materia(
           nomeMateria = "ingles",
           notas = "teste 2",
           pesoDosCriterios = "Critério A: 40%, Critério B: 60%",
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
       val materiaNome = inputMateria.text.toString().trim()
       if (materiaNome.isNotEmpty()) {
         lifecycleScope.launch {
-          val novaMateria = Materias(
+          val novaMateria = Materia(
             nomeMateria = materiaNome,
             notas = "",
             pesoDosCriterios = "",

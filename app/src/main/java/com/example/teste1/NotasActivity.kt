@@ -1,121 +1,73 @@
 package com.example.teste1
 
-import android.app.AlertDialog
+import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.Button
+import android.widget.Toast
 
 class NotasActivity : AppCompatActivity() {
-    private lateinit var materiaNome: String
-    private val notas = mutableListOf<Nota>()
+
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NotaAdapter
-    private lateinit var searchBar: EditText
+    private val notasList = mutableListOf<Nota>()
+
+    private val REQUEST_CODE_CRIAR_NOTA = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.notas_activity)
+        setContentView(R.layout.notas_activity) // 🔹 Alterado para corresponder ao seu XML
 
-        materiaNome = intent.getStringExtra("materiaNome") ?: "Matéria"
-        val tituloMateria = findViewById<TextView>(R.id.nome_avaliacao)
-        tituloMateria.text = materiaNome
+        recyclerView = findViewById(R.id.recycler_notas)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val listaNotas = findViewById<RecyclerView>(R.id.recycler_notas)
-        listaNotas.layoutManager = LinearLayoutManager(this)
-
-        adapter = NotaAdapter(this, notas) { nota ->
-            abrirDialogEdicao(nota)
-        }
-        listaNotas.adapter = adapter
-
-        searchBar = findViewById(R.id.search_bar)
-        searchBar.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filtrarNotas(s.toString())
+        adapter = NotaAdapter(this, notasList,
+            onEditClick = { nota, pos ->
+                val intent = Intent(this, NotaDetalheActivity::class.java)
+                intent.putExtra(NotaDetalheActivity.EXTRA_NOTA, nota)
+                intent.putExtra(NotaDetalheActivity.EXTRA_POSICAO, pos)
+                startActivityForResult(intent, REQUEST_CODE_CRIAR_NOTA)
+            },
+            onDeleteClick = { _, pos ->
+                notasList.removeAt(pos)
+                adapter.notifyItemRemoved(pos)
+                Toast.makeText(this, "Nota apagada", Toast.LENGTH_SHORT).show()
             }
-        })
+        )
 
-        // ✅ Correção do evento de clique do botão de adicionar anotação
-        val botaoAdicionar = findViewById<Button>(R.id.add_nota_button)
-        botaoAdicionar.setOnClickListener {
-            adicionarNota()
+        recyclerView.adapter = adapter
+
+        // 🔹 Agora o botão abre a tela de adicionar nota
+        val botaoAdicionarNota = findViewById<Button>(R.id.add_nota_button)
+        botaoAdicionarNota.setOnClickListener {
+            val intent = Intent(this, NotaDetalheActivity::class.java)
+            startActivityForResult(intent, REQUEST_CODE_CRIAR_NOTA)
         }
     }
 
-    private fun adicionarNota() {
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        layout.setPadding(32, 16, 32, 16)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        val inputTitulo = EditText(this)
-        inputTitulo.hint = "Digite o título da anotação"
-        layout.addView(inputTitulo)
+        if (requestCode == REQUEST_CODE_CRIAR_NOTA && resultCode == Activity.RESULT_OK) {
+            val novaNota = data?.getSerializableExtra(NotaDetalheActivity.EXTRA_NOTA) as? Nota
+            val apagar = data?.getBooleanExtra("apagar", false) ?: false
+            val posicao = data?.getIntExtra(NotaDetalheActivity.EXTRA_POSICAO, -1) ?: -1
 
-        val inputTexto = EditText(this)
-        inputTexto.hint = "Digite sua anotação"
-        layout.addView(inputTexto)
-
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Adicionar Nota")
-        dialog.setView(layout)
-        dialog.setPositiveButton("Salvar") { _, _ ->
-            val tituloNota = inputTitulo.text.toString().trim()
-            val textoNota = inputTexto.text.toString().trim()
-            val novaNota = Nota(tituloNota, textoNota, null)
-            notas.add(novaNota)
-            adapter.notifyItemInserted(notas.size - 1)
+            if (novaNota != null && !apagar) {
+                if (posicao != -1) {
+                    notasList[posicao] = novaNota
+                    adapter.notifyItemChanged(posicao)
+                } else {
+                    notasList.add(novaNota)
+                    adapter.notifyDataSetChanged()
+                }
+            } else if (apagar && posicao != -1) {
+                notasList.removeAt(posicao)
+                adapter.notifyItemRemoved(posicao)
+            }
         }
-        dialog.setNegativeButton("Cancelar", null)
-        dialog.show()
-    }
-
-    private fun abrirDialogEdicao(nota: Nota) {
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        layout.setPadding(32, 16, 32, 16)
-
-        val inputTitulo = EditText(this)
-        inputTitulo.setText(nota.titulo)
-        layout.addView(inputTitulo)
-
-        val inputTexto = EditText(this)
-        inputTexto.setText(nota.texto)
-        layout.addView(inputTexto)
-
-        val imagemNota = ImageView(this)
-        imagemNota.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200)
-        imagemNota.setPadding(0, 16, 0, 16)
-        if (nota.imagem == null) {
-            imagemNota.visibility = View.GONE
-        } else {
-            imagemNota.setImageBitmap(nota.imagem)
-        }
-        layout.addView(imagemNota)
-
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Editar Nota")
-        dialog.setView(layout)
-        dialog.setPositiveButton("Salvar") { _, _ ->
-            nota.titulo = inputTitulo.text.toString().trim()
-            nota.texto = inputTexto.text.toString().trim()
-            adapter.notifyDataSetChanged()
-        }
-        dialog.setNegativeButton("Cancelar", null)
-        dialog.show()
-    }
-
-    private fun filtrarNotas(textoPesquisa: String) {
-        val notasFiltradas = notas.filter { it.titulo.contains(textoPesquisa, ignoreCase = true) || it.texto.contains(textoPesquisa, ignoreCase = true) }
-        adapter.atualizarLista(notasFiltradas)
     }
 }

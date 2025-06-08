@@ -26,7 +26,13 @@
     </activity>
 
     <!-- Tela de Avaliações -->
-    <activity android:name=".ThirdActivity" />
+    <activity android:name=".ThirdActivity"/>
+    <activity android:name=".EditPesoActivity"/>
+    <activity android:name=".NotaDetalheActivity" />
+
+
+
+    />
   </application>
 
 </manifest>

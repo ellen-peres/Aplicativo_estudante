@@ -1,19 +1,26 @@
 package com.example.teste1
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class NotaAdapter(
     private val context: Context,
-    private val listaNotas: MutableList<Nota>,
-    private val onNotaClick: (Nota) -> Unit
+    private val notas: MutableList<Nota>,
+    private val onEditClick: (nota: Nota, position: Int) -> Unit,
+    private val onDeleteClick: (nota: Nota, position: Int) -> Unit
 ) : RecyclerView.Adapter<NotaAdapter.NotaViewHolder>() {
+
+    inner class NotaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tituloNota: TextView = itemView.findViewById(R.id.titulo_nota)
+        val textoNotaPreview: TextView = itemView.findViewById(R.id.texto_nota_preview)
+        val buttonEdit: Button = itemView.findViewById(R.id.button_edit_nota)
+        val buttonDelete: Button = itemView.findViewById(R.id.button_delete_nota)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotaViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_nota, parent, false)
@@ -21,35 +28,21 @@ class NotaAdapter(
     }
 
     override fun onBindViewHolder(holder: NotaViewHolder, position: Int) {
-        val nota = listaNotas[position]
-        holder.bind(nota, onNotaClick)
-    }
+        val nota = notas[position]
+        holder.tituloNota.text = nota.titulo
+        holder.textoNotaPreview.text = if (nota.texto.length > 100) {
+            nota.texto.substring(0, 100) + "..."
+        } else {
+            nota.texto
+        }
 
-    override fun getItemCount(): Int = listaNotas.size
-
-    fun atualizarLista(novasNotas: List<Nota>) {
-        listaNotas.clear()
-        listaNotas.addAll(novasNotas)
-        notifyDataSetChanged()
-    }
-
-    class NotaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tituloNota: TextView = itemView.findViewById(R.id.titulo_nota)
-        private val imagemNota: ImageView = itemView.findViewById(R.id.imagem_nota)
-
-        fun bind(nota: Nota, onNotaClick: (Nota) -> Unit) {
-            tituloNota.text = nota.titulo
-
-            if (nota.imagem == null) {
-                imagemNota.visibility = View.GONE // ✅ Oculta imagem se não houver
-            } else {
-                imagemNota.setImageBitmap(nota.imagem)
-                imagemNota.visibility = View.VISIBLE
-            }
-
-            itemView.setOnClickListener {
-                onNotaClick(nota) // ✅ Abre edição ao clicar
-            }
+        holder.buttonEdit.setOnClickListener {
+            onEditClick(nota, position)
+        }
+        holder.buttonDelete.setOnClickListener {
+            onDeleteClick(nota, position)
         }
     }
+
+    override fun getItemCount(): Int = notas.size
 }

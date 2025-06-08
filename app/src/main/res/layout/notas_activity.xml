@@ -10,7 +10,7 @@
         android:id="@+id/nome_avaliacao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nome da Avaliação"
+        android:text="Minhas anotações"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:gravity="center"
@@ -42,24 +42,19 @@
         android:layout_below="@id/search_bar"
         android:paddingBottom="12dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/add_nota_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_button"
             android:text="+"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/button_background"
-            android:textColor="#FFFFFF"
             android:textSize="22sp"
-            android:layout_marginEnd="8dp"/>
+            android:textColor="@color/branco_puro"
 
-        <Button
-            android:id="@+id/edit_nota_button"
-            android:text="✎"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/button_background"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"/>
+            />
+
+
     </LinearLayout>
 
     <!-- Lista de anotações abaixo dos botões -->

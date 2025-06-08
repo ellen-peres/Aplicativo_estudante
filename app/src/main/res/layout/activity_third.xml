@@ -64,16 +64,20 @@
         android:textColor="#FFFFFF"
         android:gravity="start|center_vertical" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/edit_peso_button"
-        android:text="Editar peso"
-        android:background="@drawable/rounded_button"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:textColor="#FFFFFF"
-        android:layout_marginRight="7dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/branco_puro"
+        android:text="Editar peso"
+        android:textAllCaps="false"
+        />
 
-    <Button
+      />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_avaliacao_button"
         android:text="+"
         android:background="@drawable/rounded_button"

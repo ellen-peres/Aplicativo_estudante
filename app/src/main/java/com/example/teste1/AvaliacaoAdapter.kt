@@ -45,11 +45,12 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
                 abrirCalendario(context, avaliacao)
             }
 
-            // ✅ **Redireciona para `NotasActivity` ao clicar na avaliação**
             itemView.setOnClickListener {
-                val intent = Intent(context, NotasActivity::class.java)
-                intent.putExtra("materiaNome", avaliacao.materia) // Passa o nome da matéria
-                context.startActivity(intent)
+                itemView.setOnClickListener {
+                    val intent = Intent(context, NotasActivity::class.java)
+                    intent.putExtra("materiaNome", avaliacao.materia)
+                    context.startActivity(intent)
+                }
             }
         }
 
@@ -62,7 +63,6 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
             DatePickerDialog(context, { _, ano, mes, dia ->
                 val dataSelecionada = "$dia/${mes + 1}/$ano"
                 avaliacao.dataAvaliacao = dataSelecionada
-
                 agendarNotificacao(context, dataSelecionada, avaliacao.materia)
             }, year, month, day).show()
         }
@@ -76,10 +76,9 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
                 notificationManager.createNotificationChannel(channel)
             }
 
-            // ✅ **Verifica permissão antes de enviar a notificação**
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                    return // 🚨 **Se a permissão não estiver concedida, não envia**
+                    return
                 }
             }
 

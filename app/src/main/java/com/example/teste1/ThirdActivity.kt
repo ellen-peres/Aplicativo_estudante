@@ -1,6 +1,7 @@
 package com.example.teste1
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -8,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class ThirdActivity : AppCompatActivity() {
+    private val REQUEST_CODE_EDIT_PESO = 1
     private val avaliacoes = mutableListOf<Avaliacao>()
     private lateinit var adapter: AvaliacaoAdapter
     private lateinit var materiaNome: String
     private lateinit var mediaLabelTop: TextView
     private lateinit var mediaLabelBottom: TextView
+    private lateinit var botaoEditarPeso: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +35,34 @@ class ThirdActivity : AppCompatActivity() {
         adapter = AvaliacaoAdapter(this, avaliacoes) { calcularMedia() }
         listaAvaliacoes.adapter = adapter
 
+        botaoEditarPeso = findViewById(R.id.edit_peso_button)
+        botaoEditarPeso.setOnClickListener {
+            abrirActivityEditPeso()
+        }
+
         val botaoAdicionar = findViewById<Button>(R.id.add_avaliacao_button)
         botaoAdicionar.setOnClickListener {
             adicionarAvaliacao()
+        }
+    }
+
+    private fun abrirActivityEditPeso() {
+        val intent = Intent(this, EditPesoActivity::class.java)
+        intent.putParcelableArrayListExtra("avaliacoes", ArrayList(avaliacoes)) // Passa as avaliações para edição
+        startActivityForResult(intent, REQUEST_CODE_EDIT_PESO) // Aguarda resultado da edição
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_EDIT_PESO && resultCode == RESULT_OK) {
+            val avaliacoesEditadas = data?.getParcelableArrayListExtra<Avaliacao>("avaliacoes_editadas")
+            if (avaliacoesEditadas != null) {
+                avaliacoes.clear()
+                avaliacoes.addAll(avaliacoesEditadas)
+                adapter.notifyDataSetChanged()
+                calcularMedia()
+            }
         }
     }
 
@@ -52,7 +80,7 @@ class ThirdActivity : AppCompatActivity() {
         layout.addView(inputNota)
 
         val tipoSpinner = Spinner(this)
-        val tipos = arrayOf("Prova", "Trabalho")
+        val tipos = arrayOf("Prova", "Trabalho", "Atividade") // <- Aqui adicionamos a nova opção
         val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tipos)
         tipoSpinner.adapter = adapterSpinner
         layout.addView(tipoSpinner)

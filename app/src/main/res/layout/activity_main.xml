@@ -44,7 +44,7 @@
         android:padding="8dp"
         android:text="+"
         android:textColor="@color/branco_puro"
-        app:iconTint="@color/borda_botao"/>
+        app:iconTint="@color/borda_botao" />
   </LinearLayout>
 
   <!-- Lista de matérias sem linha de separação e com espaçamento -->

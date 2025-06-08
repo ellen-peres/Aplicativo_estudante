@@ -5,7 +5,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+<<<<<<< Updated upstream
 import com.example.teste1.MODEL.Avaliacao
+=======
+>>>>>>> Stashed changes
 import com.example.teste1.MODEL.Materia
 
 @Dao
@@ -21,4 +24,8 @@ interface MateriaDao {
 
     @Query("SELECT * FROM Materia")
     suspend fun getAll(): List<Materia>
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

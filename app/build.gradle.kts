@@ -34,6 +34,13 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+<<<<<<< Updated upstream
+=======
+    buildFeatures {
+        viewBinding = true
+    }
+
+>>>>>>> Stashed changes
 }
 
 dependencies {

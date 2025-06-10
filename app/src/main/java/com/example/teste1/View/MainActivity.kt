@@ -18,15 +18,14 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-  private val materias = mutableListOf<String>()
-  private lateinit var adapter: ArrayAdapter<String>
+  private val materias = mutableListOf<Materia>()
+  private lateinit var adapter: MateriaAdapter
   private lateinit var dao: MateriaDao
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // Inicia o banco de dados
     val db = Room.databaseBuilder(
       applicationContext,
       AppDatabase::class.java,
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     val inputPesquisa = findViewById<EditText>(R.id.input_pesquisa_materia)
     val botaoAdicionar = findViewById<Button>(R.id.add_materia_button)
 
-    adapter = ArrayAdapter(this, R.layout.item_materia, R.id.nome_materia, materias)
+    adapter = MateriaAdapter(this, materias, dao)
     listaMaterias.adapter = adapter
 
     carregarMaterias()
@@ -48,8 +47,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     listaMaterias.setOnItemClickListener { _, _, position, _ ->
+      val nomeMateria = materias[position].nomeMateria
       val intent = Intent(this, ThirdActivity::class.java)
-      intent.putExtra("materiaNome", adapter.getItem(position))
+      intent.putExtra("materiaNome", nomeMateria)
       startActivity(intent)
     }
 
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
           converterPeso = 0
         )
         dao.inserir(novaMateria)
-        materias.add(nomeMateria)
+        materias.add(novaMateria)
         adapter.notifyDataSetChanged()
       }
     }
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     lifecycleScope.launch {
       val lista = dao.getAll()
       materias.clear()
-      materias.addAll(lista.map { it.nomeMateria })
+      materias.addAll(lista)
       adapter.notifyDataSetChanged()
     }
   }

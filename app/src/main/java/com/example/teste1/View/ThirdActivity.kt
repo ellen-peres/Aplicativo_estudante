@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teste1.R
 import com.example.teste1.com.example.teste1.MODEL.Avaliacao
+import java.util.Calendar
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 
 class ThirdActivity : AppCompatActivity() {
     private val REQUEST_CODE_EDIT_PESO = 1
@@ -23,7 +26,8 @@ class ThirdActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
 
-        materiaNome = intent.getStringExtra("materiaNome") ?: "Matéria"
+        materiaNome = intent.getStringExtra("materiaNome") ?: "Matéria não encontrada"
+        Toast.makeText(this, "Matéria recebida: $materiaNome", Toast.LENGTH_SHORT).show()
 
         val tituloMateria = findViewById<EditText>(R.id.input_materia)
         tituloMateria.setText(materiaNome)
@@ -50,8 +54,8 @@ class ThirdActivity : AppCompatActivity() {
 
     private fun abrirActivityEditPeso() {
         val intent = Intent(this, EditPesoActivity::class.java)
-        intent.putParcelableArrayListExtra("avaliacoes", ArrayList(avaliacoes)) // Passa as avaliações para edição
-        startActivityForResult(intent, REQUEST_CODE_EDIT_PESO) // Aguarda resultado da edição
+        intent.putParcelableArrayListExtra("avaliacoes", ArrayList(avaliacoes))
+        startActivityForResult(intent, REQUEST_CODE_EDIT_PESO)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -78,11 +82,11 @@ class ThirdActivity : AppCompatActivity() {
         layout.addView(inputNome)
 
         val inputNota = EditText(this)
-        inputNota.hint = "Digite a nota"
+        inputNota.hint = "Digite a nota (opcional)"
         layout.addView(inputNota)
 
         val tipoSpinner = Spinner(this)
-        val tipos = arrayOf("Prova", "Trabalho", "Atividade") // <- Aqui adicionamos a nova opção
+        val tipos = arrayOf("Prova", "Trabalho", "Atividade")
         val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tipos)
         tipoSpinner.adapter = adapterSpinner
         layout.addView(tipoSpinner)
@@ -92,19 +96,32 @@ class ThirdActivity : AppCompatActivity() {
         dialog.setView(layout)
         dialog.setPositiveButton("Adicionar") { _, _ ->
             val nomeAvaliacao = inputNome.text.toString().trim()
-            val nota = inputNota.text.toString().toFloatOrNull()
+            val notaTexto = inputNota.text.toString().trim()
+            val nota = notaTexto.toFloatOrNull()
             val tipoSelecionado = tipoSpinner.selectedItem.toString()
 
-            if (nomeAvaliacao.isEmpty() || nota == null) {
-                Toast.makeText(this, "Digite um nome e uma nota válidos!", Toast.LENGTH_SHORT).show()
+            if (nomeAvaliacao.isEmpty()) {
+                Toast.makeText(this, "Digite um nome válido!", Toast.LENGTH_SHORT).show()
                 return@setPositiveButton
             }
 
-            val novaAvaliacao = Avaliacao(nomeAvaliacao, nota, 1.0f, tipoSelecionado)
-            avaliacoes.add(novaAvaliacao)
-            adapter.notifyDataSetChanged()
-            calcularMedia()
+            val novaAvaliacao = Avaliacao(nomeAvaliacao, nota ?: -1f, 1.0f, tipoSelecionado)
+
+            val calendario = Calendar.getInstance()
+            val year = calendario.get(Calendar.YEAR)
+            val month = calendario.get(Calendar.MONTH)
+            val day = calendario.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(this, { _, ano, mes, dia ->
+                val dataSelecionada = "$dia/${mes + 1}/$ano"
+                novaAvaliacao.dataAvaliacao = dataSelecionada
+
+                avaliacoes.add(novaAvaliacao)
+                adapter.notifyDataSetChanged()
+                calcularMedia()
+            }, year, month, day).show()
         }
+
         dialog.setNegativeButton("Cancelar", null)
         dialog.show()
     }
@@ -119,8 +136,10 @@ class ThirdActivity : AppCompatActivity() {
         var somaNotas = 0f
 
         for (avaliacao in avaliacoes) {
-            somaNotas += avaliacao.nota * avaliacao.peso
-            somaPesos += avaliacao.peso
+            if (avaliacao.nota >= 0f) {
+                somaNotas += avaliacao.nota * avaliacao.peso
+                somaPesos += avaliacao.peso
+            }
         }
 
         val media: Float = if (somaPesos > 0) (somaNotas / somaPesos) else 0f

@@ -11,9 +11,6 @@ interface MateriaDao {
     @Query("SELECT * FROM Materia")
     suspend fun getAll(): List<Materia>
 
-    @Update
-    suspend fun atualizar(materia: Materia)
-
     @Delete
     suspend fun deletar(materia: Materia)
 }

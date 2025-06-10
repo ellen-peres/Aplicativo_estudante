@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teste1.R
+import com.example.teste1.View.NotasActivity
 import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 import java.util.*
 

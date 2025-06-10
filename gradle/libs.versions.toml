@@ -12,6 +12,7 @@ constraintlayout = "2.1.4"
 roomCommonJvm = "2.7.1"
 roomRuntimeAndroid = "2.7.1"
 roomRuntimeJvm = "2.7.1"
+databindingAdapters = "8.10.1"
 
 
 [libraries]
@@ -26,6 +27,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 androidx-room-runtime-jvm = { group = "androidx.room", name = "room-runtime-jvm", version.ref = "roomRuntimeJvm" }
+androidx-databinding-adapters = { group = "androidx.databinding", name = "databinding-adapters", version.ref = "databindingAdapters" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

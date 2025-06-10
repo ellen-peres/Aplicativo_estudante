@@ -1,30 +1,29 @@
-package com.example.teste1.com.example.teste1.View
+package com.example.teste1.View
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.teste1.MODEL.Nota
+import androidx.lifecycle.lifecycleScope
+import com.example.teste1.AppDatabase
+import com.example.teste1.MODEL.Anotacao
 import com.example.teste1.R
+import kotlinx.coroutines.launch
 
 class NotaDetalheActivity : AppCompatActivity() {
 
-    companion object {
-        const val EXTRA_NOTA = "extra_nota"
-        const val EXTRA_POSICAO = "extra_posicao"
-        const val REQUEST_CODE_SELECIONAR_IMAGEM = 200
-    }
-
     private lateinit var editTitulo: EditText
     private lateinit var editTexto: EditText
-    private lateinit var imagemNota: ImageView
-    private lateinit var botaoAdicionarImagem: Button
-    private var posicao: Int = -1
-    private var imagemUri: Uri? = null
+    private lateinit var botaoSalvar: Button
+    private lateinit var botaoApagar: Button
+
+    private var anotacaoId: Long? = null
+
+    private val anotacaoDao by lazy {
+        AppDatabase.getInstance(applicationContext).anotacaoDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,68 +31,70 @@ class NotaDetalheActivity : AppCompatActivity() {
 
         editTitulo = findViewById(R.id.edit_titulo)
         editTexto = findViewById(R.id.edit_texto)
-        imagemNota = findViewById(R.id.imagem_nota)
-        botaoAdicionarImagem = findViewById(R.id.btn_add_imagem)
+        botaoSalvar = findViewById(R.id.btn_salvar)
+        botaoApagar = findViewById(R.id.btn_apagar)
 
-        val notaRecebida = intent.getSerializableExtra(EXTRA_NOTA) as? Nota
-        posicao = intent.getIntExtra(EXTRA_POSICAO, -1)
+        anotacaoId = intent.getLongExtra("anotacao_id", -1L).takeIf { it != -1L }
 
-        notaRecebida?.let {
-            editTitulo.setText(it.titulo)
-            editTexto.setText(it.texto)
-            imagemUri = it.imagemUri // 🔹 Agora a imagem é carregada corretamente
-            if (imagemUri != null) {
-                imagemNota.setImageURI(imagemUri)
+        if (anotacaoId != null) {
+            lifecycleScope.launch {
+                val anotacao = anotacaoDao.getById(anotacaoId!!)
+                anotacao?.let {
+                    editTitulo.setText(it.titulo)
+                    editTexto.setText(it.texto)
+                }
             }
         }
 
-        botaoAdicionarImagem.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_CODE_SELECIONAR_IMAGEM)
-        }
-
-        val botaoSalvar = findViewById<Button>(R.id.btn_salvar)
         botaoSalvar.setOnClickListener {
-            salvarNota()
+            salvarOuAtualizar()
         }
 
-        val botaoApagar = findViewById<Button>(R.id.btn_apagar)
         botaoApagar.setOnClickListener {
-            apagarNota()
+            deletarAnotacao()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_CODE_SELECIONAR_IMAGEM && resultCode == Activity.RESULT_OK) {
-            imagemUri = data?.data
-            imagemNota.setImageURI(imagemUri)
-        }
-    }
-
-    private fun salvarNota() {
+    private fun salvarOuAtualizar() {
         val titulo = editTitulo.text.toString().trim()
         val texto = editTexto.text.toString().trim()
 
         if (titulo.isEmpty() || texto.isEmpty()) {
-            setResult(Activity.RESULT_CANCELED)
-        } else {
-            val novaNota = Nota(titulo, texto, imagemUri) // 🔹 Agora a imagem é salva!
-            val intent = Intent()
-            intent.putExtra(EXTRA_NOTA, novaNota)
-            intent.putExtra(EXTRA_POSICAO, posicao)
-            setResult(Activity.RESULT_OK, intent)
+            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+            return
         }
-        finish()
+
+        lifecycleScope.launch {
+            anotacaoId?.let { id ->
+                // Atualizar
+                val atualizada = Anotacao(id, titulo, texto)
+                anotacaoDao.update(atualizada)
+                Toast.makeText(this@NotaDetalheActivity, "Anotação atualizada", Toast.LENGTH_SHORT).show()
+            } ?: run {
+                // Inserir nova
+                val nova = Anotacao(titulo = titulo, texto = texto)
+                val idGerado = anotacaoDao.insert(nova)
+                Log.d("Notas", "Nova anotação inserida com ID: $idGerado")
+                Toast.makeText(this@NotaDetalheActivity, "Anotação salva", Toast.LENGTH_SHORT).show()
+            }
+            finish()
+        }
     }
 
-    private fun apagarNota() {
-        val intent = Intent()
-        intent.putExtra(EXTRA_POSICAO, posicao)
-        intent.putExtra("apagar", true)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
+
+    private fun deletarAnotacao() {
+        if (anotacaoId == null) {
+            Toast.makeText(this, "Nada para deletar", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        lifecycleScope.launch {
+            val anotacao = anotacaoDao.getById(anotacaoId!!)
+            if (anotacao != null) {
+                anotacaoDao.delete(anotacao)
+                Toast.makeText(this@NotaDetalheActivity, "Anotação apagada", Toast.LENGTH_SHORT).show()
+            }
+            finish()
+        }
     }
 }

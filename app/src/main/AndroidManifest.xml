@@ -14,7 +14,7 @@
       tools:targetApi="33"> <!-- Atualizado para Android 13 -->
 
     <!-- Tela Principal -->
-    <activity android:name=".com.example.teste1.View.NotasActivity"/>
+    <activity android:name=".View.NotasActivity"/>
 
     <activity
         android:name="com.example.teste1.View.MainActivity"
@@ -28,7 +28,8 @@
     <!-- Tela de Avaliações -->
     <activity android:name=".com.example.teste1.View.ThirdActivity"/>
     <activity android:name=".com.example.teste1.View.EditPesoActivity"/>
-    <activity android:name=".com.example.teste1.View.NotaDetalheActivity" />
+    <activity android:name=".View.NotaDetalheActivity" />
+
 
 
 

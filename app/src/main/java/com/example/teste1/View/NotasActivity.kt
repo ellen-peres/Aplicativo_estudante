@@ -1,75 +1,78 @@
-package com.example.teste1.com.example.teste1.View
+package com.example.teste1.View
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import android.widget.Toast
-import com.example.teste1.MODEL.Nota
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.AppDatabase
+import com.example.teste1.MODEL.Anotacao
 import com.example.teste1.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NotasActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: NotaAdapter
-    private val notasList = mutableListOf<Nota>()
+    private val anotacoesList = mutableListOf<Anotacao>()
 
-    private val REQUEST_CODE_CRIAR_NOTA = 100
+    private val db by lazy { AppDatabase.getInstance(this) }
+    private val anotacaoDao by lazy { db.anotacaoDao() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.notas_activity) // 🔹 Alterado para corresponder ao seu XML
+        setContentView(R.layout.notas_activity)
 
         recyclerView = findViewById(R.id.recycler_notas)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        adapter = NotaAdapter(this, notasList,
-            onEditClick = { nota, pos ->
+        adapter = NotaAdapter(
+            this,
+            anotacoesList,
+            onEditClick = { anotacao, _ ->
                 val intent = Intent(this, NotaDetalheActivity::class.java)
-                intent.putExtra(NotaDetalheActivity.EXTRA_NOTA, nota)
-                intent.putExtra(NotaDetalheActivity.EXTRA_POSICAO, pos)
-                startActivityForResult(intent, REQUEST_CODE_CRIAR_NOTA)
+                intent.putExtra("anotacao_id", anotacao.id)
+                startActivity(intent)
             },
-            onDeleteClick = { _, pos ->
-                notasList.removeAt(pos)
-                adapter.notifyItemRemoved(pos)
-                Toast.makeText(this, "Nota apagada", Toast.LENGTH_SHORT).show()
+            onDeleteClick = { anotacao, position ->
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        anotacaoDao.delete(anotacao)
+                    }
+                    anotacoesList.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                    Toast.makeText(this@NotasActivity, "Anotação apagada", Toast.LENGTH_SHORT).show()
+                }
             }
         )
 
         recyclerView.adapter = adapter
 
-        // 🔹 Agora o botão abre a tela de adicionar nota
         val botaoAdicionarNota = findViewById<Button>(R.id.add_nota_button)
         botaoAdicionarNota.setOnClickListener {
             val intent = Intent(this, NotaDetalheActivity::class.java)
-            startActivityForResult(intent, REQUEST_CODE_CRIAR_NOTA)
+            startActivity(intent)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_CODE_CRIAR_NOTA && resultCode == Activity.RESULT_OK) {
-            val novaNota = data?.getSerializableExtra(NotaDetalheActivity.EXTRA_NOTA) as? Nota
-            val apagar = data?.getBooleanExtra("apagar", false) ?: false
-            val posicao = data?.getIntExtra(NotaDetalheActivity.EXTRA_POSICAO, -1) ?: -1
-
-            if (novaNota != null && !apagar) {
-                if (posicao != -1) {
-                    notasList[posicao] = novaNota
-                    adapter.notifyItemChanged(posicao)
-                } else {
-                    notasList.add(novaNota)
-                    adapter.notifyDataSetChanged()
-                }
-            } else if (apagar && posicao != -1) {
-                notasList.removeAt(posicao)
-                adapter.notifyItemRemoved(posicao)
+    private fun carregarAnotacoes() {
+        lifecycleScope.launch {
+            val lista = withContext(Dispatchers.IO) {
+                anotacaoDao.getAll()
             }
+            anotacoesList.clear()
+            anotacoesList.addAll(lista)
+            adapter.notifyDataSetChanged()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        carregarAnotacoes()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.teste1.com.example.teste1.View
+package com.example.teste1.View
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.teste1.MODEL.Nota
+import com.example.teste1.MODEL.Anotacao
 import com.example.teste1.R
 
 class NotaAdapter(
     private val context: Context,
-    private val notas: MutableList<Nota>,
-    private val onEditClick: (nota: Nota, position: Int) -> Unit,
-    private val onDeleteClick: (nota: Nota, position: Int) -> Unit
+    private val anotacoes: MutableList<Anotacao>,
+    private val onEditClick: (anotacao: Anotacao, position: Int) -> Unit,
+    private val onDeleteClick: (anotacao: Anotacao, position: Int) -> Unit
 ) : RecyclerView.Adapter<NotaAdapter.NotaViewHolder>() {
 
     inner class NotaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,21 +30,21 @@ class NotaAdapter(
     }
 
     override fun onBindViewHolder(holder: NotaViewHolder, position: Int) {
-        val nota = notas[position]
-        holder.tituloNota.text = nota.titulo
-        holder.textoNotaPreview.text = if (nota.texto.length > 100) {
-            nota.texto.substring(0, 100) + "..."
+        val anotacao = anotacoes[position]
+        holder.tituloNota.text = anotacao.titulo
+        holder.textoNotaPreview.text = if (anotacao.texto.length > 100) {
+            anotacao.texto.substring(0, 100) + "..."
         } else {
-            nota.texto
+            anotacao.texto
         }
 
         holder.buttonEdit.setOnClickListener {
-            onEditClick(nota, position)
+            onEditClick(anotacao, position)
         }
         holder.buttonDelete.setOnClickListener {
-            onDeleteClick(nota, position)
+            onDeleteClick(anotacao, position)
         }
     }
 
-    override fun getItemCount(): Int = notas.size
+    override fun getItemCount(): Int = anotacoes.size
 }

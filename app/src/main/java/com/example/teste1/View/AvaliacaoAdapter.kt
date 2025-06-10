@@ -1,6 +1,6 @@
 package com.example.teste1.com.example.teste1.View
-import android.content.Intent
 
+import android.content.Intent
 import android.app.DatePickerDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -20,8 +20,11 @@ import com.example.teste1.View.NotasActivity
 import com.example.teste1.com.example.teste1.MODEL.Avaliacao
 import java.util.*
 
-class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes: List<Avaliacao>, private val atualizarMedia: () -> Unit) :
-    RecyclerView.Adapter<AvaliacaoAdapter.AvaliacaoViewHolder>() {
+class AvaliacaoAdapter(
+    private val context: Context,
+    private val listaAvaliacoes: MutableList<Avaliacao>,
+    private val atualizarMedia: () -> Unit
+) : RecyclerView.Adapter<AvaliacaoAdapter.AvaliacaoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvaliacaoViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_avaliacao, parent, false)
@@ -30,7 +33,7 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
 
     override fun onBindViewHolder(holder: AvaliacaoViewHolder, position: Int) {
         val avaliacao = listaAvaliacoes[position]
-        holder.bind(avaliacao, atualizarMedia, context)
+        holder.bind(avaliacao, position, listaAvaliacoes, atualizarMedia, context, this)
     }
 
     override fun getItemCount(): Int = listaAvaliacoes.size
@@ -39,8 +42,16 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
         private val nomeAvaliacao = itemView.findViewById<TextView>(R.id.nome_avaliacao)
         private val notaAvaliacao = itemView.findViewById<TextView>(R.id.nota_avaliacao)
         private val botaoCalendario = itemView.findViewById<Button>(R.id.calendar_button)
+        private val botaoDeletar = itemView.findViewById<Button>(R.id.delete_button)
 
-        fun bind(avaliacao: Avaliacao, atualizarMedia: () -> Unit, context: Context) {
+        fun bind(
+            avaliacao: Avaliacao,
+            position: Int,
+            lista: MutableList<Avaliacao>,
+            atualizarMedia: () -> Unit,
+            context: Context,
+            adapter: AvaliacaoAdapter
+        ) {
             nomeAvaliacao.text = avaliacao.materia
             notaAvaliacao.text = "${avaliacao.nota}/10"
 
@@ -48,12 +59,18 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
                 abrirCalendario(context, avaliacao)
             }
 
-            itemView.setOnClickListener {
-                itemView.setOnClickListener {
-                    val intent = Intent(context, NotasActivity::class.java)
-                    intent.putExtra("materiaNome", avaliacao.materia)
-                    context.startActivity(intent)
+            botaoDeletar.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    lista.removeAt(adapterPosition)
+                    adapter.notifyItemRemoved(adapterPosition)
+                    atualizarMedia()
                 }
+            }
+
+            itemView.setOnClickListener {
+                val intent = Intent(context, NotasActivity::class.java)
+                intent.putExtra("materiaNome", avaliacao.materia)
+                context.startActivity(intent)
             }
         }
 
@@ -74,8 +91,13 @@ class AvaliacaoAdapter(private val context: Context, private val listaAvaliacoes
             val channelId = "avaliacao_channel"
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(channelId, "Lembrete de Avaliação", NotificationManager.IMPORTANCE_DEFAULT)
-                val notificationManager = context.getSystemService(NotificationManager::class.java)
+                val channel = NotificationChannel(
+                    channelId,
+                    "Lembrete de Avaliação",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                val notificationManager =
+                    context.getSystemService(NotificationManager::class.java)
                 notificationManager.createNotificationChannel(channel)
             }
 

@@ -36,14 +36,7 @@
             android:layout_marginTop="12dp"/>
 
         <!-- Imagem selecionada -->
-        <ImageView
-            android:id="@+id/imagem_nota"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/minecraft"
-            android:contentDescription="Imagem da nota" />
+
 
         <!-- Botão para adicionar imagem -->
         <Button

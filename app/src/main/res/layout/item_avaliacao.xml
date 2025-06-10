@@ -1,5 +1,5 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -35,4 +35,16 @@
         android:layout_height="48dp"
         android:background="@drawable/iconcalendar"
         android:contentDescription="Selecionar data da avaliação"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/delete_button"
+        android:text="X"
+        android:background="@drawable/rounded_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:textColor="#FFFFFF"
+        android:padding="8dp" />
+
+
 </LinearLayout>
+

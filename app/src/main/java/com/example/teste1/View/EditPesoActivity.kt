@@ -6,8 +6,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.MODEL.Avaliacao
 import com.example.teste1.R
-import com.example.teste1.com.example.teste1.MODEL.Avaliacao
+
 
 class EditPesoActivity : AppCompatActivity() {
 

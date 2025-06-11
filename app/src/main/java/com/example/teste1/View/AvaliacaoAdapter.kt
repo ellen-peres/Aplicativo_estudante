@@ -15,9 +15,10 @@ import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.teste1.MODEL.Avaliacao
 import com.example.teste1.R
 import com.example.teste1.View.NotasActivity
-import com.example.teste1.com.example.teste1.MODEL.Avaliacao
+
 import java.util.*
 
 class AvaliacaoAdapter(
@@ -52,7 +53,7 @@ class AvaliacaoAdapter(
             context: Context,
             adapter: AvaliacaoAdapter
         ) {
-            nomeAvaliacao.text = avaliacao.materia
+            nomeAvaliacao.text = avaliacao.nomeAvaliacao  // <-- Aqui está a alteração principal
             notaAvaliacao.text = "${avaliacao.nota}/10"
 
             botaoCalendario.setOnClickListener {
@@ -73,6 +74,7 @@ class AvaliacaoAdapter(
                 context.startActivity(intent)
             }
         }
+
 
         private fun abrirCalendario(context: Context, avaliacao: Avaliacao) {
             val calendario = Calendar.getInstance()

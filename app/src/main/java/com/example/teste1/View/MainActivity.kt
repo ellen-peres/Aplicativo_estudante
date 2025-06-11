@@ -26,12 +26,8 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val db = Room.databaseBuilder(
-      applicationContext,
-      AppDatabase::class.java,
-      "materias.db"
-    ).build()
-    dao = db.materiaDao()
+    dao = AppDatabase.getInstance(applicationContext).materiaDao()
+
 
     val listaMaterias = findViewById<ListView>(R.id.materias_list)
     val inputPesquisa = findViewById<EditText>(R.id.input_pesquisa_materia)

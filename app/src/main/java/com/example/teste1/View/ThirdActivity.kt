@@ -1,19 +1,22 @@
 package com.example.teste1.com.example.teste1.View
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teste1.R
-import com.example.teste1.com.example.teste1.MODEL.Avaliacao
-import java.util.Calendar
-import android.app.DatePickerDialog
-import android.widget.DatePicker
+import com.example.teste1.AppDatabase
+import com.example.teste1.MODEL.Avaliacao
+import kotlinx.coroutines.launch
+import java.util.*
 
 class ThirdActivity : AppCompatActivity() {
+
     private val REQUEST_CODE_EDIT_PESO = 1
     private val avaliacoes = mutableListOf<Avaliacao>()
     private lateinit var adapter: AvaliacaoAdapter
@@ -50,6 +53,8 @@ class ThirdActivity : AppCompatActivity() {
         botaoAdicionar.setOnClickListener {
             adicionarAvaliacao()
         }
+
+        carregarAvaliacoes() // <-- carrega do banco ao iniciar
     }
 
     private fun abrirActivityEditPeso() {
@@ -91,39 +96,62 @@ class ThirdActivity : AppCompatActivity() {
         tipoSpinner.adapter = adapterSpinner
         layout.addView(tipoSpinner)
 
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Adicionar Avaliação")
-        dialog.setView(layout)
-        dialog.setPositiveButton("Adicionar") { _, _ ->
-            val nomeAvaliacao = inputNome.text.toString().trim()
-            val notaTexto = inputNota.text.toString().trim()
-            val nota = notaTexto.toFloatOrNull()
-            val tipoSelecionado = tipoSpinner.selectedItem.toString()
+        AlertDialog.Builder(this)
+            .setTitle("Adicionar Avaliação")
+            .setView(layout)
+            .setPositiveButton("Adicionar") { _, _ ->
+                val nomeAvaliacao = inputNome.text.toString().trim()
+                val notaTexto = inputNota.text.toString().trim()
+                val nota = notaTexto.toFloatOrNull() ?: -1f
+                val tipoSelecionado = tipoSpinner.selectedItem.toString()
 
-            if (nomeAvaliacao.isEmpty()) {
-                Toast.makeText(this, "Digite um nome válido!", Toast.LENGTH_SHORT).show()
-                return@setPositiveButton
+                if (nomeAvaliacao.isEmpty()) {
+                    Toast.makeText(this, "Digite um nome válido!", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+
+                val novaAvaliacao = Avaliacao(
+                    materia = materiaNome,
+                    nomeAvaliacao = nomeAvaliacao,
+                    nota = nota,
+                    peso = 1.0f,
+                    tipo = tipoSelecionado,
+                    dataAvaliacao = ""
+                )
+
+                val calendario = Calendar.getInstance()
+                val year = calendario.get(Calendar.YEAR)
+                val month = calendario.get(Calendar.MONTH)
+                val day = calendario.get(Calendar.DAY_OF_MONTH)
+
+                DatePickerDialog(this, { _, ano, mes, dia ->
+                    val dataSelecionada = "$dia/${mes + 1}/$ano"
+                    novaAvaliacao.dataAvaliacao = dataSelecionada
+
+                    lifecycleScope.launch {
+                        AppDatabase.getInstance(applicationContext).avaliacaoDao().inserir(novaAvaliacao)
+                        avaliacoes.add(novaAvaliacao)
+                        adapter.notifyDataSetChanged()
+                        calcularMedia()
+                    }
+
+                }, year, month, day).show()
             }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
 
-            val novaAvaliacao = Avaliacao(nomeAvaliacao, nota ?: -1f, 1.0f, tipoSelecionado)
+    private fun carregarAvaliacoes() {
+        lifecycleScope.launch {
+            val lista = AppDatabase.getInstance(applicationContext)
+                .avaliacaoDao()
+                .getByMateria(materiaNome)
 
-            val calendario = Calendar.getInstance()
-            val year = calendario.get(Calendar.YEAR)
-            val month = calendario.get(Calendar.MONTH)
-            val day = calendario.get(Calendar.DAY_OF_MONTH)
-
-            DatePickerDialog(this, { _, ano, mes, dia ->
-                val dataSelecionada = "$dia/${mes + 1}/$ano"
-                novaAvaliacao.dataAvaliacao = dataSelecionada
-
-                avaliacoes.add(novaAvaliacao)
-                adapter.notifyDataSetChanged()
-                calcularMedia()
-            }, year, month, day).show()
+            avaliacoes.clear()
+            avaliacoes.addAll(lista)
+            adapter.notifyDataSetChanged()
+            calcularMedia()
         }
-
-        dialog.setNegativeButton("Cancelar", null)
-        dialog.show()
     }
 
     private fun calcularMedia() {

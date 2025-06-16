@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teste1.MODEL.Avaliacao
-
 import com.example.teste1.databinding.EditPesoItemBinding
 
 class AvaliacaoPesoAdapter(
@@ -26,7 +25,7 @@ class AvaliacaoPesoAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val avaliacao = avaliacoes[position]
 
-        holder.binding.nomeAvaliacao.text = avaliacao.materia  // ou nome da avaliação, depende do que você quer mostrar
+        holder.binding.nomeAvaliacao.text = avaliacao.nomeAvaliacao
         holder.binding.notaAvaliacao.text = String.format("%.1f/10", avaliacao.nota)
         holder.binding.inputPeso.setText(avaliacao.peso.toString())
 
@@ -35,6 +34,7 @@ class AvaliacaoPesoAdapter(
                 val peso = s.toString().toFloatOrNull() ?: 0f
                 avaliacao.peso = peso
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })

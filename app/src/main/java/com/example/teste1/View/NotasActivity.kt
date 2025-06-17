@@ -3,7 +3,7 @@ package com.example.teste1.View
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageButton // Importação do ImageButton
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -15,9 +15,6 @@ import com.example.teste1.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.teste1.com.example.teste1.View.ThirdActivity
-
-
 
 class NotasActivity : AppCompatActivity() {
 
@@ -25,7 +22,7 @@ class NotasActivity : AppCompatActivity() {
     private lateinit var adapter: NotaAdapter
     private val anotacoesList = mutableListOf<Anotacao>()
 
-    private lateinit var botaoAnterior: ImageButton // Variável do botão de voltar
+    private lateinit var botaoAnterior: ImageButton
 
     private val db by lazy { AppDatabase.getInstance(this) }
     private val anotacaoDao by lazy { db.anotacaoDao() }
@@ -65,16 +62,10 @@ class NotasActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        botaoAnterior = findViewById(R.id.botao_anterior) // Configurando botão de voltar
+        botaoAnterior = findViewById(R.id.botao_anterior)
         botaoAnterior.setOnClickListener {
-            voltarParaThirdActivity()
+            finish()  // Apenas fecha a NotasActivity e volta para a tela anterior (ThirdActivity em tempo real)
         }
-    }
-
-    private fun voltarParaThirdActivity() { // Função de navegação para ThirdActivity
-        val intent = Intent(this, ThirdActivity::class.java)
-        startActivity(intent)
-        finish() // Fecha NotasActivity para liberar memória e evitar sobrecarga de pilha
     }
 
     private fun carregarAnotacoes() {

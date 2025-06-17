@@ -1,7 +1,6 @@
 package com.example.teste1.View
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -20,6 +19,7 @@ class NotaDetalheActivity : AppCompatActivity() {
     private lateinit var botaoApagar: Button
 
     private var anotacaoId: Long? = null
+    private var nomeAvaliacao: String? = null
 
     private val anotacaoDao by lazy {
         AppDatabase.getInstance(applicationContext).anotacaoDao()
@@ -35,6 +35,7 @@ class NotaDetalheActivity : AppCompatActivity() {
         botaoApagar = findViewById(R.id.btn_apagar)
 
         anotacaoId = intent.getLongExtra("anotacao_id", -1L).takeIf { it != -1L }
+        nomeAvaliacao = intent.getStringExtra("nome_avaliacao")
 
         if (anotacaoId != null) {
             lifecycleScope.launch {
@@ -46,13 +47,8 @@ class NotaDetalheActivity : AppCompatActivity() {
             }
         }
 
-        botaoSalvar.setOnClickListener {
-            salvarOuAtualizar()
-        }
-
-        botaoApagar.setOnClickListener {
-            deletarAnotacao()
-        }
+        botaoSalvar.setOnClickListener { salvarOuAtualizar() }
+        botaoApagar.setOnClickListener { deletarAnotacao() }
     }
 
     private fun salvarOuAtualizar() {
@@ -64,37 +60,36 @@ class NotaDetalheActivity : AppCompatActivity() {
             return
         }
 
+        val nomeAval = nomeAvaliacao
+        if (nomeAval.isNullOrEmpty()) {
+            Toast.makeText(this, "Nome da avaliação não fornecido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
-            anotacaoId?.let { id ->
-                // Atualizar
-                val atualizada = Anotacao(id, titulo, texto)
+            if (anotacaoId != null) {
+                val atualizada = Anotacao(id = anotacaoId!!, titulo = titulo, texto = texto, nomeAvaliacao = nomeAval)
                 anotacaoDao.update(atualizada)
                 Toast.makeText(this@NotaDetalheActivity, "Anotação atualizada", Toast.LENGTH_SHORT).show()
-            } ?: run {
-                // Inserir nova
-                val nova = Anotacao(titulo = titulo, texto = texto)
-                val idGerado = anotacaoDao.insert(nova)
-                Log.d("Notas", "Nova anotação inserida com ID: $idGerado")
+            } else {
+                val nova = Anotacao(titulo = titulo, texto = texto, nomeAvaliacao = nomeAval)
+                anotacaoDao.insert(nova)
                 Toast.makeText(this@NotaDetalheActivity, "Anotação salva", Toast.LENGTH_SHORT).show()
             }
             finish()
         }
     }
 
-
     private fun deletarAnotacao() {
-        if (anotacaoId == null) {
-            Toast.makeText(this, "Nada para deletar", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        lifecycleScope.launch {
-            val anotacao = anotacaoDao.getById(anotacaoId!!)
-            if (anotacao != null) {
-                anotacaoDao.delete(anotacao)
-                Toast.makeText(this@NotaDetalheActivity, "Anotação apagada", Toast.LENGTH_SHORT).show()
+        anotacaoId?.let { id ->
+            lifecycleScope.launch {
+                val anotacao = anotacaoDao.getById(id)
+                anotacao?.let {
+                    anotacaoDao.delete(it)
+                    Toast.makeText(this@NotaDetalheActivity, "Anotação apagada", Toast.LENGTH_SHORT).show()
+                }
+                finish()
             }
-            finish()
         }
     }
 }

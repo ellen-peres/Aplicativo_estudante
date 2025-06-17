@@ -70,9 +70,11 @@ class AvaliacaoAdapter(
 
             itemView.setOnClickListener {
                 val intent = Intent(context, NotasActivity::class.java)
-                intent.putExtra("materiaNome", avaliacao.materia)
+                intent.putExtra("nome_avaliacao", avaliacao.nomeAvaliacao) // Certo aqui!
                 context.startActivity(intent)
             }
+
+
         }
 
 

@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.teste1.AppDatabase
 import com.example.teste1.MODEL.Anotacao
 import com.example.teste1.R
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class NotasActivity : AppCompatActivity() {
 
@@ -27,9 +25,13 @@ class NotasActivity : AppCompatActivity() {
     private val db by lazy { AppDatabase.getInstance(this) }
     private val anotacaoDao by lazy { db.anotacaoDao() }
 
+    private var nomeAvaliacao: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.notas_activity)
+
+        nomeAvaliacao = intent.getStringExtra("nome_avaliacao")
 
         recyclerView = findViewById(R.id.recycler_notas)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -40,13 +42,12 @@ class NotasActivity : AppCompatActivity() {
             onEditClick = { anotacao, _ ->
                 val intent = Intent(this, NotaDetalheActivity::class.java)
                 intent.putExtra("anotacao_id", anotacao.id)
+                intent.putExtra("nome_avaliacao", nomeAvaliacao)
                 startActivity(intent)
             },
             onDeleteClick = { anotacao, position ->
                 lifecycleScope.launch {
-                    withContext(Dispatchers.IO) {
-                        anotacaoDao.delete(anotacao)
-                    }
+                    anotacaoDao.delete(anotacao)
                     anotacoesList.removeAt(position)
                     adapter.notifyItemRemoved(position)
                     Toast.makeText(this@NotasActivity, "Anotação apagada", Toast.LENGTH_SHORT).show()
@@ -56,26 +57,24 @@ class NotasActivity : AppCompatActivity() {
 
         recyclerView.adapter = adapter
 
-        val botaoAdicionarNota = findViewById<Button>(R.id.add_nota_button)
-        botaoAdicionarNota.setOnClickListener {
+        findViewById<Button>(R.id.add_nota_button).setOnClickListener {
             val intent = Intent(this, NotaDetalheActivity::class.java)
+            intent.putExtra("nome_avaliacao", nomeAvaliacao)
             startActivity(intent)
         }
 
         botaoAnterior = findViewById(R.id.botao_anterior)
-        botaoAnterior.setOnClickListener {
-            finish()  // Apenas fecha a NotasActivity e volta para a tela anterior (ThirdActivity em tempo real)
-        }
+        botaoAnterior.setOnClickListener { finish() }
     }
 
     private fun carregarAnotacoes() {
-        lifecycleScope.launch {
-            val lista = withContext(Dispatchers.IO) {
-                anotacaoDao.getAll()
+        nomeAvaliacao?.let { nome ->
+            lifecycleScope.launch {
+                val lista = anotacaoDao.getByNomeAvaliacao(nome)
+                anotacoesList.clear()
+                anotacoesList.addAll(lista)
+                adapter.notifyDataSetChanged()
             }
-            anotacoesList.clear()
-            anotacoesList.addAll(lista)
-            adapter.notifyDataSetChanged()
         }
     }
 

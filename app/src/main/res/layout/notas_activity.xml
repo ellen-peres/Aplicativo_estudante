@@ -5,6 +5,16 @@
     android:background="@drawable/background_gradient"
     android:padding="16dp">
 
+    <ImageButton
+        android:id="@+id/botao_anterior"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="0dp"
+        android:src="@drawable/ic_seta_esquerda"
+        android:background="@android:color/transparent"
+        android:contentDescription="Voltar para tela inicial"
+        android:layout_margin="0dp"/>
+
     <!-- Nome da avaliação -->
     <TextView
         android:id="@+id/nome_avaliacao"
@@ -13,8 +23,9 @@
         android:text="Minhas anotações"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
+        android:padding="8dp"
         android:gravity="center"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="40dp"/>
 
     <!-- Barra de pesquisa -->
     <EditText
@@ -50,11 +61,7 @@
             android:background="@drawable/rounded_button"
             android:text="+"
             android:textSize="22sp"
-            android:textColor="@color/branco_puro"
-
-            />
-
-
+            android:textColor="@color/branco_puro"/>
     </LinearLayout>
 
     <!-- Lista de anotações abaixo dos botões -->

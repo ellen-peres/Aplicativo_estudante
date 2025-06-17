@@ -5,6 +5,15 @@
     android:orientation="vertical"
     android:background="@drawable/background_gradient"
     android:padding="16dp">
+  <ImageButton
+      android:id="@+id/botao_voltar"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginBottom="0dp"
+      android:src="@drawable/ic_seta_esquerda"
+      android:background="@android:color/transparent"
+      android:contentDescription="Voltar para tela inicial"
+      android:layout_margin="0dp"/>
 
   <!-- Campo de entrada para o nome da matéria -->
   <EditText
@@ -12,12 +21,13 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="Nome da matéria:"
+      android:inputType="text|textCapSentences|textVisiblePassword"
       android:background="@drawable/edittext_border"
       android:padding="12dp"
       android:textColor="#FFFFFF"
       android:textColorHint="#BBBBBB"
       android:layout_marginBottom="16dp"
-      android:layout_marginTop="78dp"/>
+      android:layout_marginTop="20dp"/>
 
   <!-- Exibição da média -->
   <LinearLayout
@@ -26,6 +36,8 @@
       android:orientation="vertical"
       android:gravity="center"
       android:layout_marginBottom="16dp">
+
+
 
     <TextView
         android:id="@+id/media_label_top"
@@ -72,10 +84,9 @@
         android:background="@drawable/rounded_button"
         android:textColor="@color/branco_puro"
         android:text="Editar peso"
-        android:textAllCaps="false"
-        />
+        android:textAllCaps="false" />
 
-      />
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add_avaliacao_button"

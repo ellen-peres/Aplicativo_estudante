@@ -4,8 +4,7 @@
   <!-- Estado quando pressionado -->
   <item android:state_pressed="true">
     <shape android:shape="rectangle">
-      <color name="botao_ativo">#1F3A52</color> <!-- Cor do botão quando pressionado -->
-
+      <solid android:color="@color/botao_ativo"/> <!-- Cor corrigida -->
       <corners android:radius="12dp"/>
       <stroke android:width="2dp" android:color="@color/borda_botao"/>
       <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp"/>

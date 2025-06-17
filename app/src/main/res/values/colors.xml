@@ -3,6 +3,7 @@
     <color name="fundo_app">#2E4F63</color> <!-- Fundo escuro -->
     <color name="campo_pesquisa">#505B6A</color> <!-- Cor do fundo da barra de pesquisa -->
     <color name="borda_botao">#2E4F63</color> <!-- Cor da borda dos botões -->
+    <color name="botao_ativo">#1F3A52</color>
 
     <color name="botao_acao">#2E4F63</color> <!-- Cor do botão -->
     <color name="branco_puro">#FFFFFF</color> <!-- Textos brancos -->

@@ -14,6 +14,7 @@ import com.example.teste1.AppDatabase
 import com.example.teste1.MODEL.Avaliacao
 import kotlinx.coroutines.launch
 import java.util.*
+import com.example.teste1.View.MainActivity
 
 class ThirdActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class ThirdActivity : AppCompatActivity() {
     private lateinit var mediaLabelTop: TextView
     private lateinit var mediaLabelBottom: TextView
     private lateinit var botaoEditarPeso: Button
+    private lateinit var btnVoltar: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +56,19 @@ class ThirdActivity : AppCompatActivity() {
             adicionarAvaliacao()
         }
 
-        carregarAvaliacoes() // <-- carrega do banco ao iniciar
+        btnVoltar = findViewById(R.id.botao_voltar)
+
+        btnVoltar.setOnClickListener {
+            voltarParaMain()
+        }
+
+        carregarAvaliacoes()
+    }
+
+    private fun voltarParaMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun abrirActivityEditPeso() {

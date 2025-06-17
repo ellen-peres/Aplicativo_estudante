@@ -59,36 +59,57 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun adicionarMateria() {
-    val inputMateria = EditText(this)
-    inputMateria.hint = "Digite o nome da matéria"
-
-    val dialog = AlertDialog.Builder(this)
-    dialog.setTitle("Adicionar Matéria")
-    dialog.setView(inputMateria)
-    dialog.setPositiveButton("Adicionar") { _, _ ->
-      val nomeMateria = inputMateria.text.toString().trim()
-
-      if (nomeMateria.isEmpty()) {
-        Toast.makeText(this, "O nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
-        return@setPositiveButton
-      }
-
-      lifecycleScope.launch {
-        val novaMateria = Materia(
-          nomeMateria = nomeMateria,
-          notas = "",
-          pesoDosCriterios = "",
-          soma = 0,
-          converterPeso = 0
-        )
-        dao.inserir(novaMateria)
-        materias.add(novaMateria)
-        adapter.notifyDataSetChanged()
+    // Cria um EditText customizado com configuração explícita para aceitar todos os caracteres unicode
+    val inputMateria = object : EditText(this) {
+      override fun onCheckIsTextEditor(): Boolean {
+        return true
       }
     }
-    dialog.setNegativeButton("Cancelar", null)
+
+    inputMateria.hint = "Digite o nome da matéria"
+    inputMateria.isSingleLine = false
+    inputMateria.maxLines = 3
+    inputMateria.setLines(3)
+    inputMateria.inputType = android.text.InputType.TYPE_CLASS_TEXT or
+            android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or
+            android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE or
+            android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or
+            android.text.InputType.TYPE_TEXT_VARIATION_NORMAL
+
+    // Remove filtros (se tiver)
+    inputMateria.filters = arrayOf()
+
+    val dialog = AlertDialog.Builder(this)
+      .setTitle("Adicionar Matéria")
+      .setView(inputMateria)
+      .setPositiveButton("Adicionar") { _, _ ->
+        val nomeMateria = inputMateria.text.toString().trim()
+
+        if (nomeMateria.isEmpty()) {
+          Toast.makeText(this, "O nome da matéria não pode ser vazio!", Toast.LENGTH_SHORT).show()
+          return@setPositiveButton
+        }
+
+        lifecycleScope.launch {
+          val novaMateria = Materia(
+            nomeMateria = nomeMateria,
+            notas = "",
+            pesoDosCriterios = "",
+            soma = 0,
+            converterPeso = 0
+          )
+          dao.inserir(novaMateria)
+          materias.add(novaMateria)
+          adapter.notifyDataSetChanged()
+        }
+      }
+      .setNegativeButton("Cancelar", null)
+      .create()
+
     dialog.show()
   }
+
+
 
   private fun carregarMaterias() {
     lifecycleScope.launch {
